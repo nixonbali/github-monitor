@@ -25,3 +25,16 @@ The [GH Archive](https://www.gharchive.org/) is available for download via an AP
 
 ### Producing from API to git-events topic
 `./kafka_producer.py <ip-address>:9092 <start-year> <start-month> <start-day> <end-year> <end-month> <end-day>`
+
+### Streaming from Kafka Topic (git-events) to Kafka Topic (pr-events)
+- Create new pr-events topic (as above)
+- Install `faust`, a pure Python stream processing library for Kafka (`pip3 install faust`)
+- Create Streamer (`events_streamer.py`)
+  - Create a faust app, acknowledge the previously created topics
+  - Create an agent to consume from the git-events topic, filter for pr-events, and then produce to the pr-events topic
+- Run `faust -A events_streamer worker -l info` to run streamer
+
+## Testing Kafka Cluster
+- Create a 'test' topic in Kafka Cluster
+- `testing/test_pipelin.py` produces to this topic with `EventsProducer` by reading from `test.json`
+- This topic can be monitored as outlined above.
