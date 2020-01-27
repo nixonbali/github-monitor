@@ -36,5 +36,5 @@ The [GH Archive](https://www.gharchive.org/) is available for download via an AP
 
 ## Testing Kafka Cluster
 - Create a 'test' topic in Kafka Cluster
-- `testing/test_pipelin.py` produces to this topic with `EventsProducer` by reading from `test.json`
+- `testing/test_pipeline.py` produces to this topic with `EventsProducer` by reading from `test.json`
 - This topic can be monitored as outlined above.

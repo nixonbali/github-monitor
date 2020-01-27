@@ -5,6 +5,7 @@ from kafka.client import KafkaClient
 from kafka.producer import KafkaProducer
 import json
 import sys
+import secrets
 
 
 class EventsProducer(Destination):
@@ -21,10 +22,7 @@ class EventsProducer(Destination):
                 self.producer.send(self.topic, d).get()
 
 if __name__ == "__main__":
-    if len(sys.argv) == 1:
-        print("Requires IP Address")
-        sys.exit(0)
-    ip_addr = sys.argv[1]
+    ip_addr = sys.argv[1] if len(sys.argv) > 1 else secrets.BROKER1
     start_date, end_date = date_reader(sys.argv[2:])
     ## run with nohup to print to nohup.out
     print("IP Address: {}\nTopic: git-events\nStart Date: {}\nEnd Date: {}".format(ip_addr, start_date, end_date))
