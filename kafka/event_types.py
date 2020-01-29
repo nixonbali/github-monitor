@@ -1,5 +1,7 @@
 import faust
 
+
+
 ## github user
 class Actor(faust.Record, serializer='json'):
     login: str
@@ -25,16 +27,17 @@ class Head(faust.Record, serializer='json'):
 # pull request
 class PullRequest(faust.Record, serializer='json'):
     id: int # key
-    merged: str
     diff_url: str
     patch_url: str
-    commits: int
-    additions: int
-    deletions: int
-    changed_files: int
-    mergeable: str
-    mergeable_state: str
     head: Head
+    merged: str = None
+    commits: int = None
+    additions: int = None
+    deletions: int = None
+    changed_files: int = None
+    mergeable: str = None
+    mergeable_state: str = None
+
 
 # pull request payload
 class PRPayload(faust.Record, serializer='json'):
