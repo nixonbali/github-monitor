@@ -21,7 +21,7 @@ class Head(faust.Record, serializer='json'):
     open_issues_count: int
     repo: DetailedRepo
 
-    
+
 # pull request
 class PullRequest(faust.Record, serializer='json'):
     id: int # key
@@ -55,6 +55,7 @@ class GeneralEvent(faust.Record, serializer='json'):
     actor: Actor
     repo: Repo
     created_at: str # format: "2016-06-05T18:01:26Z"
+    type: str
 
 
 

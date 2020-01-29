@@ -2,6 +2,7 @@ import faust
 import json
 import secrets
 from event_types import *
+from collab_graph import CollabGraph
 
 app = faust.App('git-app', broker=secrets.BROKER1)
 
@@ -25,10 +26,12 @@ async def process_event(events):
 
 
 ### Graph writer
-@app.agent(collab_topic)
-async def process_collab(collabs):
-    async for collab in collabs:
-        print(collab.actor.login)
+# @app.agent(collab_topic)
+# async def process_collab(events):
+#     async for event in events:
+#         #print(collab.actor.login)
+#         Graph = CollabGraph(secrets.NEO4J_BROKER, secrets.NEO4J_USER, secrets.NEO4J_PASSWORD)
+#         Graph.add_action(event)
         # client = aredis.StrictRedis(host="localhost", port=6379)
         # await client.zadd(activity.user, activity.timestamp, activity.message)
 
