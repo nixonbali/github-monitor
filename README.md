@@ -13,7 +13,7 @@ The [GH Archive](https://www.gharchive.org/) is available for download via an AP
 `kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor <rep-factor> --partitions <num-partitions> --topic <topic-name>`
 ### Confirming creation on other brokers
 `kafka-topics.sh --describe --zookeeper localhost:2181 --topic <topic-name>`
-### Producing Message from Node
+### Producing Custom Message from Node
 `kafka-console-producer.sh --broker-list localhost:9092 --topic topic <topic-name>`
 - Enter Message in console
 ### Viewing Consumed Messages from Node

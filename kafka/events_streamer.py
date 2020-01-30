@@ -7,10 +7,10 @@ from collab_graph import CollabGraph
 
 app = faust.App('git-app', broker=secrets.BROKER1)
 
-events_topic = app.topic("git-events")
-pr_events_topic = app.topic("pr-events", value_type=PREvent)
-collab_topic = app.topic("collab", value_type=GeneralEvent)
-pr_closed_topic = app.topic("pr-closed")
+events_topic = app.topic("git-events3")
+pr_events_topic = app.topic("pr-events3", value_type=PREvent)
+collab_topic = app.topic("collab3", value_type=GeneralEvent)
+pr_closed_topic = app.topic("pr-closed-ids4")
 
 pull_request_events = ["PullRequestEvent", "PullRequestReviewEvent", "PullRequestReviewCommentEvent"]
 
@@ -35,9 +35,9 @@ async def process_pr_events(pr_events):
        client = aredis.StrictRedis(host='localhost', port=6379)
        await client.rpush(pr_event.payload.pull_request.id, pr_event)
        if pr_event.payload.action == 'closed':
-           pr_len = await client.llen(pr_event.payload.pull_request.id)
-           full_pr = await client.lrange(pr_event.payload.pull_request.id, 0, pr_len)
-           await pr_closed_topic.send(value=full_pr)
+           #pr_len = await client.llen(pr_event.payload.pull_request.id)
+           #full_pr = await client.lrange(pr_event.payload.pull_request.id, 0, pr_len)
+           await pr_closed_topic.send(value=pr_event.payload.pull_request.id)
            #print(full_pr)
 
 

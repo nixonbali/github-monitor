@@ -9,7 +9,7 @@ import secrets
 
 
 class EventsProducer(Destination):
-    def __init__(self, addr, topic="git-events"):
+    def __init__(self, addr, topic="git-events3"):
         self.producer = KafkaProducer(bootstrap_servers=addr, value_serializer=lambda m: json.dumps(m).encode('ascii'))
         self.topic = topic
 
