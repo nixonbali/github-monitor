@@ -1,19 +1,18 @@
 from grest import GRest
-from models import User
+from models import User, Repo
 from flask_classful import route
 from flask import jsonify
 
 
-class ReposView(GRest):
-    __model__ = {"Primary": Repo}
-    __selection_field__ {"primary": "name",
-                            "secondary": {
-                                "users": ""
-                            }}
+
 
 
 class UsersView(GRest):
-    __model__ = {"primary": User}
+    """User's View (/users)"""
+    __model__ = {"primary": User,
+                    "secondary": {
+                        "repos": Repo
+                    }}
     __selection_field__ = {"primary": "login",
                             "secondary": {
                                 "repos": "name"

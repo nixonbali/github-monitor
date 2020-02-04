@@ -9,6 +9,7 @@ import neomodel
 from flask import Flask
 from grest import global_config
 from users_view import UsersView
+from repos_view import ReposView
 
 app = Flask(__name__)
 
@@ -30,6 +31,7 @@ app.ext_logger = app.logger
 
 # register users' view
 UsersView.register(app, route_base="/users", trailing_slash=False)
+ReposView.register(app, route_base="/repos", trailing_slash=False)
 
 if __name__ == "__main__":
     app.run(host="localhost", port=5000)
