@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
+import sys
+sys.path.insert(1,'../ingestion')
 from api_ingestor import Destination, EventsIngestor
 from helpers import date_reader
 from kafka.client import KafkaClient
 from kafka.producer import KafkaProducer
 import json
-import sys
 import secrets
 
 
 class EventsProducer(Destination):
-    def __init__(self, addr, topic="git-events3"):
+    def __init__(self, addr, topic="git-events"):
         self.producer = KafkaProducer(bootstrap_servers=addr, value_serializer=lambda m: json.dumps(m).encode('ascii'))
         self.topic = topic
 

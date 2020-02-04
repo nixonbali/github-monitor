@@ -8,13 +8,15 @@ The [GH Archive](https://www.gharchive.org/) is available for download via an AP
 ## Kafka Cluster
 
 - Set up w/ Peg **EXPAND ON THIS**
+- upgrade python version to 3.6 (for faust, neo4j, redis dependicies)
+- install faust, neo4j, redis, postgresql python3 drivers on each 
 
 ### Creating Topics
 `kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor <rep-factor> --partitions <num-partitions> --topic <topic-name>`
 ### Confirming creation on other brokers
 `kafka-topics.sh --describe --zookeeper localhost:2181 --topic <topic-name>`
 ### Producing Custom Message from Node
-`kafka-console-producer.sh --broker-list localhost:9092 --topic topic <topic-name>`
+`kafka-console-producer.sh --broker-list localhost:9092 --topic <topic-name>`
 - Enter Message in console
 ### Viewing Consumed Messages from Node
 `kafka-console-consumer.sh --zookeeper localhost:2181 --from-beginning --topic <topic-name>`
@@ -38,3 +40,10 @@ The [GH Archive](https://www.gharchive.org/) is available for download via an AP
 - Create a 'test' topic in Kafka Cluster
 - `testing/test_pipeline.py` produces to this topic with `EventsProducer` by reading from `test.json`
 - This topic can be monitored as outlined above.
+
+## Neo4j
+- Start a new instance that will host the collaboration network in a Neo4j database.
+
+
+## Redis + PostgreSQL
+- Redis can run as a cache on the kafka-cluster, but PostgreSQL, which will be used to store PR metrics, repository, and user information, will require a new instance.

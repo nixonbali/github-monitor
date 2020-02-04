@@ -19,8 +19,6 @@ class EventsConsumer():
 #     def consume_and_write(self):
 #         for event in self.consumer:
 #             print("Unimplemented")
-            #Graph = CollabGraph(secrets.NEO4J_BROKER, secrets.NEO4J_USER, secrets.NEO4J_PASSWORD)
-            #Graph.add_action(event)
 
 class PRClosedConsumer(EventsConsumer):
     def consume_and_write(self):
@@ -30,8 +28,7 @@ class PRClosedConsumer(EventsConsumer):
             pr_len = client.llen(pr_id.value)
             full_pr = client.lrange(pr_id.value, 0, pr_len)
             print(full_pr)
-            #Graph = CollabGraph(secrets.NEO4J_BROKER, secrets.NEO4J_USER, secrets.NEO4J_PASSWORD)
-            #Graph.add_action(event)
+
 
 class GraphConsumer(EventsConsumer):
     def consume_and_write(self):
@@ -40,9 +37,9 @@ class GraphConsumer(EventsConsumer):
             Graph.add_action(event)
 
 consumers = {
-    "collab3":GraphConsumer,
+    "collab":GraphConsumer,
     #"pr-events3":PREventsConsumer,
-    "pr-closed-ids4":PRClosedConsumer
+    "pr-closed-ids":PRClosedConsumer
 }
 
 def new_consumer(topic, ip_addr, auto_commit, auto_offset_reset):
