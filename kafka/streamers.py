@@ -96,7 +96,7 @@ async def process_pr_closed(closed_pr_ids):
                 #                    (pr_id, close_event['repo']['name']))
 
                 await conn.execute(
-                "insert into pullrequests (id,num,repo,pr_diff_url,created_at,closed_at,additions,changed_files,commits,deletions,merged,num_reviews_requested,num_review_comments) values (%s, %s, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                "insert into pull_requests (id,num,repo,pr_diff_url,created_at,closed_at,additions,changed_files,commits,deletions,merged,num_reviews_requested,num_review_comments) values (%s, %s, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
                                     (pr_id, 0,#close_event['payload']['number'],
                                     close_event['repo']['name'], close_event['payload']['pull_request']['diff_url'],
                                     opentime, closetime, close_event['payload']['pull_request']['additions'],
