@@ -14,7 +14,7 @@ create table pullrequests (
   merged boolean,
   num_reviews_requested integer,
   num_review_comments integer
-)
+);
 
 -- create table comments (
 --   id integer primary key unique,

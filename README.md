@@ -9,7 +9,7 @@ The [GH Archive](https://www.gharchive.org/) is available for download via an AP
 
 - Set up w/ Peg **EXPAND ON THIS**
 - upgrade python version to 3.6 (for faust, neo4j, redis dependicies)
-- install faust, neo4j, redis, postgresql python3 drivers on each 
+- install faust, neo4j, redis, postgresql python3 drivers on each
 
 ### Creating Topics
 `kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor <rep-factor> --partitions <num-partitions> --topic <topic-name>`
@@ -31,10 +31,10 @@ The [GH Archive](https://www.gharchive.org/) is available for download via an AP
 ### Streaming from Kafka Topic (git-events) to Kafka Topic (pr-events)
 - Create new pr-events topic (as above)
 - Install `faust`, a pure Python stream processing library for Kafka (`pip3 install faust`)
-- Create Streamer (`events_streamer.py`)
+- Create Streamer (`streamers.py`)
   - Create a faust app, acknowledge the previously created topics
   - Create an agent to consume from the git-events topic, filter for pr-events, and then produce to the pr-events topic
-- Run `faust -A events_streamer worker -l info` to run streamer
+- Run `faust -A streamers worker -l info` to run streamer
 
 ## Testing Kafka Cluster
 - Create a 'test' topic in Kafka Cluster
@@ -47,3 +47,5 @@ The [GH Archive](https://www.gharchive.org/) is available for download via an AP
 
 ## Redis + PostgreSQL
 - Redis can run as a cache on the kafka-cluster, but PostgreSQL, which will be used to store PR metrics, repository, and user information, will require a new instance.
+
+## PostgreSQL

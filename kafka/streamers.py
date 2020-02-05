@@ -6,33 +6,7 @@ import aredis
 from collab_graph import CollabGraph
 from topic_names import git_events, pull_requests, collabs, closed_prs
 from dateutil.parser import parse
-
-import asyncio
-import sqlalchemy as sa
 from aiopg.sa import create_engine
-metadata = sa.MetaData()
-tbl = sa.Table('pullrequests', metadata,
-               sa.Column('id', sa.Integer, primary_key=True),
-               sa.Column('num', sa.Integer),
-               sa.Column('repo', sa.String(255)),
-               sa.Column('')
-
-db = create_engine('user='postgres', database='postgres', host=secrets.POSTGRES_BROKER)
-pullrequests = sa.Table('pullrequests', db, autoload=True)
-
-  id integer primary key unique,
-  num integer,
-  repo varchar(255),
-  pr_diff_url varchar(255),
-  created_at timestamp,
-  closed_at timestamp,
-  additions integer,
-  changed_files integer,
-  commits integer,
-  deletions integer,
-  merged boolean,
-  num_reviews_requested integer,
-  num_review_comments integer
 
 app = faust.App('git-app', broker=secrets.BROKER1)
 
@@ -99,27 +73,38 @@ async def process_pr_closed(closed_pr_ids):
         opentime = await client.get(str(pr_id) + 'opentime')
         if opentime is not None:
             opentime = parse(opentime)
-            print("HERE")
+            # print("HERE")
         num_events = await client.get(str(pr_id) + 'events')
+        if num_events:
+            num_events = int(num_events)
         num_review = await client.get(str(pr_id) + 'reviews')
-
-
+        if num_review:
+            num_review = int(num_review)
 
 
         close_event = await client.get(pr_id)
         close_event = json.loads(close_event)
         closetime = parse(close_event['created_at'])
-        print(close_event)
-
-
-
+        #print(close_event)
         ###
 
 
 
-        async with create_engine(user='postgres', database='postgres', host=secrets.POSTGRES_BROKER) as engine:
+        async with create_engine(user='gituser', database='gitdb', host=secrets.POSTGRES_BROKER) as engine:
             async with engine.acquire() as conn:
-                await conn.execute(tbl.insert().values(id=1,name='testpr',repo='testrepo'))
+                #await conn.execute("insert into testtable (num, repo) values (%s, %s)",
+                #                    (pr_id, close_event['repo']['name']))
+
+                await conn.execute(
+                "insert into pullrequests (id,num,repo,pr_diff_url,created_at,closed_at,additions,changed_files,commits,deletions,merged,num_reviews_requested,num_review_comments) values (%s, %s, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                                    (pr_id, 0,#close_event['payload']['number'],
+                                    close_event['repo']['name'], close_event['payload']['pull_request']['diff_url'],
+                                    opentime, closetime, close_event['payload']['pull_request']['additions'],
+                                    close_event['payload']['pull_request']['changed_files'],
+                                    close_event['payload']['pull_request']['commits'],
+                                    close_event['payload']['pull_request']['deletions'],
+                                    close_event['payload']['pull_request']['merged'],
+                                    num_review, num_events))
 
 
 
