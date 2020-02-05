@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
+import sys
+sys.path.insert(1,'../ingestion')
 from api_ingestor import Destination, EventsIngestor
 from helpers import date_reader
 from kafka.client import KafkaClient
 from kafka.producer import KafkaProducer
 import json
-import sys
 import secrets
 
 

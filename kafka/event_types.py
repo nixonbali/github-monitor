@@ -18,23 +18,38 @@ class DetailedRepo(faust.Record, serializer='json'):
 
 # pull request head
 class Head(faust.Record, serializer='json'):
-    open_issues_count: int
     repo: DetailedRepo
+    open_issues_count: int = None
 
 
 # pull request
 class PullRequest(faust.Record, serializer='json'):
     id: int # key
-    merged: str
+    number: int
     diff_url: str
     patch_url: str
-    commits: int
-    additions: int
-    deletions: int
-    changed_files: int
-    mergeable: str
-    mergeable_state: str
     head: Head
+    merged: str = None
+    commits: int = None
+    additions: int = None
+    deletions: int = None
+    changed_files: int = None
+    mergeable: str = None
+    mergeable_state: str = None
+
+# pr review request payload
+class PRReviewRequestPayload(faust.Record, serializer='json'):
+    action: str
+
+class Comment(faust.Record, serializer='json'):
+    actor: Actor
+    body: str
+    created_at: str
+
+# pr review comment payload
+class PRReviewCommentPayload(faust.Record, serializer='json'):
+    action: str
+    comment: Comment
 
 # pull request payload
 class PRPayload(faust.Record, serializer='json'):
@@ -56,10 +71,3 @@ class GeneralEvent(faust.Record, serializer='json'):
     repo: Repo
     created_at: str # format: "2016-06-05T18:01:26Z"
     type: str
-
-
-
-#### PR LOGIC
-# if PR event
-# if PR Closed
-# #
