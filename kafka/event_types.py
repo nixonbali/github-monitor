@@ -71,10 +71,3 @@ class GeneralEvent(faust.Record, serializer='json'):
     repo: Repo
     created_at: str # format: "2016-06-05T18:01:26Z"
     type: str
-
-
-
-#### PR LOGIC
-# if PR event
-# if PR Closed
-# #

@@ -15,19 +15,15 @@ class EventsConsumer():
                                         auto_offset_reset=auto_offset_reset,
                                         api_version=(0,1,0))
 
-# class PREventsConsumer(EventsConsumer):
+#
+# class PRClosedConsumer(EventsConsumer):
 #     def consume_and_write(self):
-#         for event in self.consumer:
-#             print("Unimplemented")
-
-class PRClosedConsumer(EventsConsumer):
-    def consume_and_write(self):
-        client = redis.StrictRedis(host="localhost", port=6379)
-        for pr_id in self.consumer:
-            print(pr_id.value)
-            pr_len = client.llen(pr_id.value)
-            full_pr = client.lrange(pr_id.value, 0, pr_len)
-            print(full_pr)
+#         client = redis.StrictRedis(host="localhost", port=6379)
+#         for pr_id in self.consumer:
+#             print(pr_id.value)
+#             pr_len = client.llen(pr_id.value)
+#             full_pr = client.lrange(pr_id.value, 0, pr_len)
+#             print(full_pr)
 
 
 class GraphConsumer(EventsConsumer):
@@ -39,7 +35,7 @@ class GraphConsumer(EventsConsumer):
 consumers = {
     "collab":GraphConsumer,
     #"pr-events3":PREventsConsumer,
-    "pr-closed-ids":PRClosedConsumer
+    # "pr-closed-ids":PRClosedConsumer
 }
 
 def new_consumer(topic, ip_addr, auto_commit, auto_offset_reset):
