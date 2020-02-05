@@ -2,6 +2,7 @@ from grest import GRest
 from models import User, Repo
 from flask_classful import route
 from flask import jsonify
+#import markupsafe
 
 
 
@@ -15,15 +16,21 @@ class UsersView(GRest):
                     }}
     __selection_field__ = {"primary": "login",
                             "secondary": {
-                                "repos": "name"
+                                "repos": "id"
                             }}
 
     @route("/<login>/repos", methods=["GET"])
     def listrepos(self, login):
         print('here')
         try:
-            user = User.nodes.get(**{self.__selection_field__.get("primary"): str(markupsafe.escape(login))})
+            print('trying')
+            print({self.__selection_field__.get("primary"): login})
+            #print(**{self.__selection_field__.get("primary"): str(markupsafe.escape(login))})
+            user = User.nodes.get(**{self.__selection_field__.get("primary"): login})
+            print('switching')
             if (user):
+                print()
+                print(user.repos)
                 repos = user.repos.get()
                 print("here")
                 if (repos):
@@ -33,6 +40,12 @@ class UsersView(GRest):
                     return jsonify(errors=["User has no repos!"]), 404
             else:
                 return jsonify(errors=["Selected user does not exists!"]), 404
+
+            # definition = dict(node_class=User, direction=OUTGOING,
+            #                   relation_type=None, model=None)
+            # relations_traversal = Traversal(user, User.__label__,
+            #                                 definition)
+            # all_users_relations = relations_traversal.all()
     #
     #
     #

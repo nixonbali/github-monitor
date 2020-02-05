@@ -7,7 +7,7 @@ from flask import jsonify
 
 class ReposView(GRest):
     """Repo's View (/repos)"""
-    __model__ = {"Primary": Repo}
+    __model__ = {"primary": Repo}
     __selection_field__ = {"primary": "id",
                             "secondary": {
                                 "users": "login"
