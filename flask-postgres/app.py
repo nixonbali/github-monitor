@@ -1,7 +1,6 @@
-from flask import Flask #, jsonify
+from flask import Flask, render_template, request, redirect, url_for
 from secrets import POSTGRES
 from pr_model import PRModel, PRSchema, rdb, ma
-
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
@@ -11,24 +10,36 @@ ma.init_app(app)
 pr_schema = PRSchema()
 prs_schema = PRSchema(many=True)
 
-
 @app.route('/')
 def main():
     return 'Hello World!'
 
+@app.route('/index', methods = ('GET', 'POST'))
+def index():
+    if request.method == 'POST':
+        username = request.form['username']
+        repo = request.form['repo']
+        return  redirect(url_for('repo_pull_requests',user=username,repo=repo))
+    return render_template("index.html")
+
+"""
+
+API Calls
+
+"""
 @app.route('/pullrequest/examples')
 def example_pull_requests():
     prs = PRModel.all_prs()
     return {"pullrequests": prs_schema.dump(prs[:3])}
 
-
+"""Pull Request by PR ID"""
 @app.route('/pullrequest/id/<id>')
 def single_pull_request(id):
     prs = PRModel.get_pr_by_id(id)
     return {"pullrequests": prs_schema.dump(prs)}
-
 # test id: 645165
 
+"""Pull Requests by Repo"""
 @app.route('/pullrequest/repo/<user>/<repo>')
 def repo_pull_requests(user, repo):
     prs = PRModel.get_pr_by_repo("/".join((user,repo)))
@@ -36,4 +47,4 @@ def repo_pull_requests(user, repo):
 
 if __name__ == "__main__":
     app.config['DEBUG'] = True
-    app.run(host="localhost", port=5000)
+    app.run(host="0.0.0.0", port=5000)

@@ -1,0 +1,42 @@
+<!doctype html>
+<title>Git Explore</title>
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+<nav>
+  <h1>Git Explore</h1>
+</nav>
+
+  <h1>Query!</h1>
+
+
+  <form method="post">
+    <label for="login">username</label>
+    <input name="username" id="username">
+    <label for="repo">repository</label>
+    <input name="repo" id="repo">
+    <input type="submit" value="Query">
+  </form>
+<!-- <body>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="{{
+    url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
+</body>
+
+
+<script type=text/javascript>
+  $(function() {
+    $('a#calculate').bind('click', function() {
+      $.getJSON($SCRIPT_ROOT + '/_add_numbers', {
+        a: $('input[name="a"]').val(),
+        b: $('input[name="b"]').val()
+      }, function(data) {
+        $("#result").text(data.result);
+      });
+      return false;
+    });
+  });
+</script>
+<h1>jQuery Example</h1>
+<p><input type=text size=5 name=a> +
+   <input type=text size=5 name=b> =
+   <span id=result>?</span>
+<p><a href=# id=calculate>calculate server side</a> -->
