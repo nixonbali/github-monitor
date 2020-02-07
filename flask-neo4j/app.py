@@ -34,4 +34,5 @@ UsersView.register(app, route_base="/users", trailing_slash=False)
 ReposView.register(app, route_base="/repos", trailing_slash=False)
 
 if __name__ == "__main__":
+    app.config['DEBUG'] = True
     app.run(host="localhost", port=5000)

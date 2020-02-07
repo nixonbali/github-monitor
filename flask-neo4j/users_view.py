@@ -1,5 +1,5 @@
 from grest import GRest
-from models import User, Repo
+from neo4j_models import User, Repo
 from flask_classful import route
 from flask import jsonify
 #import markupsafe
@@ -29,17 +29,29 @@ class UsersView(GRest):
             user = User.nodes.get(**{self.__selection_field__.get("primary"): login})
             print('switching')
             if (user):
-                print()
-                print(user.repos)
-                repos = user.repos.get()
+                # definition = dict(node_class=Person, direction=OUTGOING, relation_type=None, model=None)
+                # relations_traversal = Traversal(jim, Person.__label__, definition)
+                # all_jims_relations = relations_traversal.all()
+                #print(user.repos())
+                repos = [repo.to_dict() for repo in user.repos.all()]
+
                 print("here")
                 if (repos):
-                    print('repos')
-                    return jsonify(repos=repos.to_dict()), 200
+                    print(repos)
+                    if type(repos) == type([]):
+
+                        print({'repos':repos})
+                        return jsonify({'repos':repos})
+                    else:
+                        return jsonify(repos=repos.to_dict), 200
                 else:
                     return jsonify(errors=["User has no repos!"]), 404
             else:
                 return jsonify(errors=["Selected user does not exists!"]), 404
+        except Exception as e:
+                print(type(e))
+                print(e)
+                return jsonify(errors=["An error occurred while processing your request."]), 500
 
             # definition = dict(node_class=User, direction=OUTGOING,
             #                   relation_type=None, model=None)
@@ -63,5 +75,3 @@ class UsersView(GRest):
     #                 return jsonify(errors=["Selected pet has not been adopted yet!"]), 404
     #         else:
     #             return jsonify(errors=["Selected pet does not exists!"]), 404
-        except:
-            return jsonify(errors=["An error occurred while processing your request."]), 500
