@@ -1,20 +1,35 @@
 <!doctype html>
-<title>Git Explore</title>
-<!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
-<nav>
-  <h1>Git Explore</h1>
-</nav>
+<head>
+  <title>Git Explore</title>
+
+  <!-- jQuery. Not downloaded as backup yet -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <!-- my jQuery script -->
+  <script src="{{ url_for('static', filename='form.js') }}"></script>
+
+  <!-- style -->
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+</head>
+<body>
+  <nav>
+    <h1>Git Explore</h1>
+  </nav>
 
   <h1>Query!</h1>
 
-
-  <form method="post">
-    <label for="login">username</label>
-    <input name="username" id="username">
-    <label for="repo">repository</label>
-    <input name="repo" id="repo">
-    <input type="submit" value="Query">
-  </form>
+  <div>
+    <form>
+      <label for="usernameInput">username</label>
+      <input name="username" id="usernameInput">
+      <label for="repoInput">repository</label>
+      <input name="repo" id="repoInput">
+      <input type="submit" value="Query">
+    </form>
+    <br>
+    <div id="NoPR"></div>
+    <div id="PR"></div>
+  </div>
+</body>
 <!-- <body>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="{{
