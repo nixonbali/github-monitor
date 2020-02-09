@@ -16,7 +16,7 @@ class UsersView(GRest):
                     }}
     __selection_field__ = {"primary": "login",
                             "secondary": {
-                                "repos": "id"
+                                "repos": "repo_id"
                             }}
 
     @route("/<login>/repos", methods=["GET"])

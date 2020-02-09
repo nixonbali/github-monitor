@@ -11,9 +11,9 @@ class EventInfo(StructuredRel, models.Relation):
 
 class Repo(StructuredNode, models.Node):
     """Repo Model"""
-    id = IntegerProperty()
+    repo_id = IntegerProperty()
     name = StringProperty()
-    #users = RelationshipFrom("User", "event", cardinality=ZeroOrMore)
+    users = RelationshipFrom("User", "event", cardinality=ZeroOrMore)
 
 class User(StructuredNode, models.Node):
     """User Model"""
