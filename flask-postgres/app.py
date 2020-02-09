@@ -77,6 +77,7 @@ def repo_metrics(user, repo):
     metrics = PRModel.get_repo_metrics("/".join((user,repo)))
     return json.dumps(pr_schema.dump(metrics))
 
+"""PR Open Time by Repo"""
 @app.route('/pr_time/repo/<user>/<repo>')
 def repo_pr_time(user, repo):
     pr_time = PRModel.get_repo_pr_time("/".join((user,repo)))[0]

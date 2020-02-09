@@ -2,9 +2,6 @@ from neomodel import ZeroOrMore, StructuredNode, IntegerProperty, StringProperty
 from grest import models
 from webargs import fields
 
-
-# class Repo()
-
 class EventInfo(StructuredRel, models.Relation):
     """Event Information Model"""
     count = IntegerProperty()
