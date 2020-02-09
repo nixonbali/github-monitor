@@ -4,6 +4,7 @@ from pr_model import PRModel, PRSchema, rdb, ma
 import requests
 import json
 
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
 rdb.init_app(app)
@@ -24,12 +25,28 @@ def index():
 def process():
     username = request.form['username']
     repo = request.form['repo']
-    pull_requests = requests.get("http://0.0.0.0:5000" + url_for('repo_pull_requests',user=username,repo=repo)).json()
-    num_pr = len(pull_requests['pullrequests'])
+    pull_requests = requests.get("http://0.0.0.0:5000" + url_for('repo_pull_requests',user=username,repo=repo)).json()['pullrequests']
+    num_pr = len(pull_requests)
     if num_pr == 0:
         return jsonify({'error': 'username / repo non-existent or contains no pull requests'})
     else:
-        return jsonify({'num_pr': num_pr})
+        ### PR Metrics
+
+        #avg time to close
+        #ttc = sum([(pr['closed_at'] - pr['created_at']) for pr in pull_requests])/len(pull_requests)
+
+        merge_rate = sum([pr['merged'] for pr in pull_requests])/num_pr
+
+        metrics = requests.get("http://0.0.0.0:5000" + url_for('repo_metrics',user=username,repo=repo)).json()
+        metrics['num_pr'] = num_pr
+        metrics['merge_rate'] = merge_rate
+
+        mean_open_time = requests.get("http://0.0.0.0:5000" + url_for('repo_pr_time',user=username,repo=repo)).json()
+        print(mean_open_time)
+        metrics.update(mean_open_time)
+
+
+        return jsonify(metrics)
 
 """
 
@@ -53,6 +70,22 @@ def single_pull_request(id):
 def repo_pull_requests(user, repo):
     prs = PRModel.get_pr_by_repo("/".join((user,repo)))
     return json.dumps({"pullrequests": prs_schema.dump(prs)})
+
+"""PR Metrics by Repo"""
+@app.route('/metrics/repo/<user>/<repo>')
+def repo_metrics(user, repo):
+    metrics = PRModel.get_repo_metrics("/".join((user,repo)))
+    return json.dumps(pr_schema.dump(metrics))
+
+@app.route('/pr_time/repo/<user>/<repo>')
+def repo_pr_time(user, repo):
+    pr_time = PRModel.get_repo_pr_time("/".join((user,repo)))[0]
+    #print(pr_time)
+    return {
+        'days' : pr_time.days,
+        'hours': pr_time.seconds // 3600,
+        'minutes': (pr_time.seconds % 3600) / 60,
+      }
 
 if __name__ == "__main__":
     app.config['DEBUG'] = True
