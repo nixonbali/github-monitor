@@ -1,7 +1,9 @@
 from grest import GRest
-from neo4j_models import User, Repo
 from flask_classful import route
 from flask import jsonify
+import sys
+sys.path.append('../')
+from models.neo4j_models import User, Repo
 
 
 

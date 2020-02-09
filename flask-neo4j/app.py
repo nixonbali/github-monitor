@@ -8,8 +8,8 @@ import logging
 import neomodel
 from flask import Flask
 from grest import global_config
-from users_view import UsersView
-from repos_view import ReposView
+from views.users_view import UsersView
+from views.repos_view import ReposView
 
 app = Flask(__name__)
 
