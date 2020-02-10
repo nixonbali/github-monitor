@@ -36,6 +36,28 @@ class UsersView(GRest):
         except Exception as e:
                 return jsonify(errors=["An error occurred while processing your request."]), 500
 
+    @route("<login>/collabs", methods = ["GET"])
+    def listcollabs(self, login):
+        try:
+            user = User.nodes.get(**{self.__selection_field__.get("primary"): login})
+            if (user):
+                repos = user.repos.all()
+                if (repos):
+                    all_collabs = []
+                    for repo in repos:
+                        for collab in repo.users.all():
+                            if collab not in all_collabs:
+                                all_collabs.append(collab)
+                    return jsonify({'users':[collab.to_dict() for collab in all_collabs]})
+                else:
+                    return jsonify(errors=["User has no repos!"]), 404
+            else:
+                return jsonify(errors=["Selected user does not exists!"]), 404
+        except Exception as e:
+                return jsonify(errors=["An error occurred while processing your request."]), 500
+
+
+
             # definition = dict(node_class=User, direction=OUTGOING,
             #                   relation_type=None, model=None)
             # relations_traversal = Traversal(user, User.__label__,
