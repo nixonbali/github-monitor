@@ -39,6 +39,12 @@ def index():
 def process():
     username = request.form['username']
     repo = request.form['repo']
+    ### user-only input
+    if repo == '':
+        print('\nHERE\n')
+        collabs = requests.get("http://0.0.0.0:5000" + url_for('UsersView:listcollabs', login=username)).json()
+        return jsonify(collabs)
+    ### repo input
     pull_requests = requests.get("http://0.0.0.0:5000" + url_for('repo_pull_requests',user=username,repo=repo)).json()['pullrequests']
     num_pr = len(pull_requests)
     if num_pr == 0:
