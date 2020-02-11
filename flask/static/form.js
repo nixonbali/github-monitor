@@ -37,7 +37,7 @@ $(document).ready(function() {
         d = document.getElementById('users')
         d.innerHTML = ""
         for (i = 0; i < data.users.length; i++) {
-          newUser = document.createElement("div")
+          newUser = document.createElement("tr")
           console.log(data.users[i])
 
           newUser.innerHTML = data.users[i]['login'];

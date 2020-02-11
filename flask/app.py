@@ -41,7 +41,6 @@ def process():
     repo = request.form['repo']
     ### user-only input
     if repo == '':
-        print('\nHERE\n')
         collabs = requests.get("http://0.0.0.0:5000" + url_for('UsersView:listcollabs', login=username)).json()
         return jsonify(collabs)
     ### repo input

@@ -7,37 +7,57 @@
   <!-- my jQuery script -->
   <script src="{{ url_for('static', filename='form.js') }}"></script>
 
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
   <!-- style -->
   <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
 </head>
 <body>
-  <nav>
-    <h1>Git Explore</h1>
-  </nav>
 
-  <h1>Query!</h1>
 
-  <div>
-    <form>
-      <label for="usernameInput">username</label>
-      <input name="username" id="usernameInput">
-      <label for="repoInput">repository</label>
-      <input name="repo" id="repoInput">
-      <input type="submit" value="Query">
-    </form>
-    <br>
+  <div class = "container">
+    <div class="jumbotron">
+      <nav>
+        <h1>Git Explore</h1>
+      </nav>
+      <form>
+        <label for="usernameInput">username</label>
+        <input name="username" id="usernameInput">
+        <label for="repoInput">repository</label>
+        <input name="repo" id="repoInput">
+        <input type="submit" value="Query">
+      </form>
+    </div>
+    <h2>Repo Health</h2>
     <div id="NoPR"></div>
-    # Pull Requests: <span id="PRCount"></span><br>
-    Merge Rate: <span id="PRMergeRate"></span></br>
-    Average # Additions: <span id="PRAdditions"></span></br>
-    Average # Deletions: <span id="PRDeletions"></span></br>
-    Average # Commits: <span id="PRCommits"></span></br>
-    Average # Changed Files: <span id="PRChangedFiles"></span></br>
-    Average Time Open: <span id="PRMeanDays"></span> Days, <span id="PRMeanHours"></span> Hours, <span id="PRMeanMinutes"></span> Minutes</br>
-
-    <br>
-    <br>
-    Collaborators:<div id="users"></div>
+    <div class="table-responsive">
+      <table class="table-striped">
+        <tbody>
+          <tr><td>Total # Pull Requests:</td><td><span id="PRCount"></span></td></tr>
+          <tr><td>Merge Rate:</td><td><span id="PRMergeRate"></span></td></tr>
+          <tr><td>Average # Additions:</td><td><span id="PRAdditions"></span></td></tr>
+          <tr><td>Average # Deletions:</td><td><span id="PRDeletions"></span></td></tr>
+          <tr><td>Average # Commits:</td><td><span id="PRCommits"></span></td></tr>
+          <tr><td>Average # Changed Files:</td><td><span id="PRChangedFiles"></span></td></tr>
+          <tr><td>Average Time Open:</td><td><span id="PRMeanDays"></span> Days, <span id="PRMeanHours"></span> Hours, <span id="PRMeanMinutes"></span> Minutes</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h2>Collaborators:</h2>
+    <!-- <div id="users"></div> -->
+    <div class="table-responsive">
+      <table class="table-striped">
+        <tbody id ="users">
+        </tbody>
+      </table>
+    </div>
   </div>
 </body>
 <!-- <body>
