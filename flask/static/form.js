@@ -40,7 +40,7 @@ $(document).ready(function() {
           newUser = document.createElement("div")
           console.log(data.users[i])
 
-          newUser.innerHTML = JSON.stringify(data.users[i]);
+          newUser.innerHTML = data.users[i]['login'];
           d.appendChild(newUser);
         }
       }
