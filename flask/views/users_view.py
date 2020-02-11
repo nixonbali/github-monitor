@@ -8,7 +8,7 @@ from models.neo4j_models import User, Repo
 
 
 class UsersView(GRest):
-    """User's View (/users)"""
+    """User's View (/v1/users)"""
     __model__ = {"primary": User,
                     "secondary": {
                         "repos": Repo

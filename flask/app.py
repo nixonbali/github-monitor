@@ -66,32 +66,32 @@ def process():
 API Calls
 
 """
-@app.route('/pullrequest/examples')
+@app.route('/v1/pullrequest/examples')
 def example_pull_requests():
     prs = PRModel.all_prs()
     return {"pullrequests": prs_schema.dump(prs[:3])}
 
 """Pull Request by PR ID"""
-@app.route('/pullrequest/id/<id>')
+@app.route('/v1/pullrequest/id/<id>')
 def single_pull_request(id):
     prs = PRModel.get_pr_by_id(id)
     return {"pullrequests": prs_schema.dump(prs)}
 # test id: 645165
 
 """Pull Requests by Repo"""
-@app.route('/pullrequest/repo/<user>/<repo>')
+@app.route('/v1/pullrequest/repo/<user>/<repo>')
 def repo_pull_requests(user, repo):
     prs = PRModel.get_pr_by_repo("/".join((user,repo)))
     return json.dumps({"pullrequests": prs_schema.dump(prs)})
 
 """PR Metrics by Repo"""
-@app.route('/metrics/repo/<user>/<repo>')
+@app.route('/v1/metrics/repo/<user>/<repo>')
 def repo_metrics(user, repo):
     metrics = PRModel.get_repo_metrics("/".join((user,repo)))
     return json.dumps(pr_schema.dump(metrics))
 
 """PR Open Time by Repo"""
-@app.route('/pr_time/repo/<user>/<repo>')
+@app.route('/v1/pr_time/repo/<user>/<repo>')
 def repo_pr_time(user, repo):
     pr_time = PRModel.get_repo_pr_time("/".join((user,repo)))[0]
     #print(pr_time)
@@ -102,8 +102,8 @@ def repo_pr_time(user, repo):
       }
 
 """Neo4j Views"""
-UsersView.register(app, route_base="/users", trailing_slash=False)
-ReposView.register(app, route_base="/repos", trailing_slash=False)
+UsersView.register(app, route_base="/v1/users", trailing_slash=False)
+ReposView.register(app, route_base="/v1/repos", trailing_slash=False)
 
 if __name__ == "__main__":
     app.config['DEBUG'] = True

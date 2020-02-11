@@ -8,7 +8,7 @@ from models.neo4j_models import User, Repo
 
 
 class ReposView(GRest):
-    """Repo's View (/repos)"""
+    """Repo's View (/v1/repos)"""
     __model__ = {"primary": Repo}
     __selection_field__ = {"primary": "repo_id",
                             "secondary": {
