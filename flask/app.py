@@ -94,11 +94,11 @@ def repo_metrics(user, repo):
 @app.route('/v1/pr_time/repo/<user>/<repo>')
 def repo_pr_time(user, repo):
     pr_time = PRModel.get_repo_pr_time("/".join((user,repo)))[0]
-    #print(pr_time)
+    hours, seconds = divmod(pr_time.seconds, 3600)
     return {
         'days' : pr_time.days,
-        'hours': pr_time.seconds // 3600,
-        'minutes': (pr_time.seconds % 3600) / 60,
+        'hours': hours,
+        'minutes': seconds / 60,
       }
 
 """Neo4j Views"""
