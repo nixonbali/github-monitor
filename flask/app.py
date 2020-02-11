@@ -7,6 +7,7 @@ import neomodel
 from grest import global_config
 from views.users_view import UsersView
 from views.repos_view import ReposView
+from models.neo4j_models import Repo
 
 
 app = Flask(__name__)
@@ -44,21 +45,20 @@ def process():
         return jsonify({'error': 'username / repo non-existent or contains no pull requests'})
     else:
         ### PR Metrics
-
-        #avg time to close
-        #ttc = sum([(pr['closed_at'] - pr['created_at']) for pr in pull_requests])/len(pull_requests)
-
         merge_rate = sum([pr['merged'] for pr in pull_requests])/num_pr
-
         metrics = requests.get("http://0.0.0.0:5000" + url_for('repo_metrics',user=username,repo=repo)).json()
         metrics['num_pr'] = num_pr
         metrics['merge_rate'] = merge_rate
-
         mean_open_time = requests.get("http://0.0.0.0:5000" + url_for('repo_pr_time',user=username,repo=repo)).json()
-        #print(mean_open_time)
         metrics.update(mean_open_time)
 
-
+        ### Connections
+        rv = ReposView()
+        repo_id = Repo.nodes.get(**{rv.__selection_field__.get("alt"): "/".join((username,repo))}).repo_id
+        #print(repo_id)
+        users = requests.get("http://0.0.0.0:5000" + url_for('ReposView:listusers',repo_id = repo_id)).json()
+        #print(users)
+        metrics.update(users)
         return jsonify(metrics)
 
 """

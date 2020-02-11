@@ -11,12 +11,13 @@ class ReposView(GRest):
     """Repo's View (/v1/repos)"""
     __model__ = {"primary": Repo}
     __selection_field__ = {"primary": "repo_id",
+                            "alt": "name",
                             "secondary": {
                                 "users": "login"
                             }}
 
     @route("/<repo_id>/users", methods=["GET"])
-    def listrepos(self, repo_id):
+    def listusers(self, repo_id):
         try:
             repo = Repo.nodes.get(**{self.__selection_field__.get("primary"): repo_id})
             if (repo):

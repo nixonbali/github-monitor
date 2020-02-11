@@ -34,6 +34,15 @@ $(document).ready(function() {
         $('#PRMeanDays').text(data.days).show();
         $('#PRMeanHours').text(data.hours).show();
         $('#PRMeanMinutes').text(data.minutes).show();
+        d = document.getElementById('users')
+        d.innerHTML = ""
+        for (i = 0; i < data.users.length; i++) {
+          newUser = document.createElement("div")
+          console.log(data.users[i])
+
+          newUser.innerHTML = JSON.stringify(data.users[i]);
+          d.appendChild(newUser);
+        }
       }
     });
     event.preventDefault();
