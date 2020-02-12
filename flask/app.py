@@ -60,9 +60,7 @@ def process():
         ### Connections
         rv = ReposView()
         repo_id = Repo.nodes.get(**{rv.__selection_field__.get("alt"): "/".join((username,repo))}).repo_id
-        #print(repo_id)
         users = requests.get("http://0.0.0.0:5000" + url_for('ReposView:listusers',repo_id = repo_id)).json()
-        #print(users)
         metrics.update(users)
         return jsonify(metrics)
 

@@ -22,7 +22,7 @@ $(document).ready(function() {
         $('#PRMeanHours').hide();
         $('#PRMeanMinutes').hide();
       }
-      // non-empty pull_requests
+      // non-empty pull_requests + user-only input
       else {
 				$('#NoPR').hide();
         $('#PRCount').text(data.num_pr).show();
