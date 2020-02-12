@@ -35,28 +35,32 @@
         <input type="submit" value="Query">
       </form>
     </div>
-    <h2>Repo Health</h2>
-    <div id="NoPR"></div>
-    <div class="table-responsive">
-      <table class="table-striped">
-        <tbody>
-          <tr><td>Total # Pull Requests:</td><td><span id="PRCount"></span></td></tr>
-          <tr><td>Merge Rate:</td><td><span id="PRMergeRate"></span></td></tr>
-          <tr><td>Average # Additions:</td><td><span id="PRAdditions"></span></td></tr>
-          <tr><td>Average # Deletions:</td><td><span id="PRDeletions"></span></td></tr>
-          <tr><td>Average # Commits:</td><td><span id="PRCommits"></span></td></tr>
-          <tr><td>Average # Changed Files:</td><td><span id="PRChangedFiles"></span></td></tr>
-          <tr><td>Average Time Open:</td><td><span id="PRMeanDays"></span> Days, <span id="PRMeanHours"></span> Hours, <span id="PRMeanMinutes"></span> Minutes</td></tr>
-        </tbody>
-      </table>
+    <div class="col-md-4">
+      <h2>Repo Health</h2>
+      <div id="NoPR"></div>
+      <div class="table-responsive">
+        <table class="table-striped">
+          <tbody>
+            <tr><td>Total # Pull Requests:</td><td><span id="PRCount"></span></td></tr>
+            <tr><td>Merge Rate:</td><td><span id="PRMergeRate"></span></td></tr>
+            <tr><td>Average # Additions:</td><td><span id="PRAdditions"></span></td></tr>
+            <tr><td>Average # Deletions:</td><td><span id="PRDeletions"></span></td></tr>
+            <tr><td>Average # Commits:</td><td><span id="PRCommits"></span></td></tr>
+            <tr><td>Average # Changed Files:</td><td><span id="PRChangedFiles"></span></td></tr>
+            <tr><td>Average Time Open:</td><td><span id="PRMeanDays"></span> Days, <span id="PRMeanHours"></span> Hours, <span id="PRMeanMinutes"></span> Minutes</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-    <h2>Collaborators:</h2>
-    <!-- <div id="users"></div> -->
-    <div class="table-responsive">
-      <table class="table-striped">
-        <tbody id ="users">
-        </tbody>
-      </table>
+    <div class="col-md-4">
+      <h2>Collaborators:</h2>
+      <!-- <div id="users"></div> -->
+      <div class="table-responsive">
+        <table class="table-striped">
+          <tbody id ="users">
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </body>
