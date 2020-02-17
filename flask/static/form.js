@@ -38,10 +38,19 @@ $(document).ready(function() {
         d.innerHTML = ""
         for (i = 0; i < data.users.length; i++) {
           newUser = document.createElement("tr")
-          console.log(data.users[i])
+          // console.log(data.users[i])
 
           newUser.innerHTML = data.users[i]['login'];
           d.appendChild(newUser);
+        }
+        r = document.getElementById('repos')
+        r.innerHTML = ""
+        for (i = 0; i < data.repos.length; i++) {
+          newRepo = document.createElement("tr")
+          // console.log(data.repos[i])
+
+          newRepo.innerHTML = data.repos[i]['name'];
+          r.appendChild(newRepo);
         }
       }
     });

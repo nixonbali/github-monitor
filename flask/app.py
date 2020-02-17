@@ -39,9 +39,12 @@ def main():
 def process():
     username = request.form['username']
     repo = request.form['repo']
+    ### user's repos
+    repos = call_api('UsersView:listrepos', login=username)
     ### user-only input
     if repo == '':
         collabs = call_api('UsersView:listcollabs', login=username)
+        collabs.update(repos)
         return jsonify(collabs)
     ### repo input
     pull_requests = call_api('repo_pull_requests',user=username,repo=repo)['pullrequests']
@@ -62,6 +65,7 @@ def process():
         repo_id = Repo.nodes.get(**{rv.__selection_field__.get("alt"): "/".join((username,repo))}).repo_id
         users = call_api('ReposView:listusers',repo_id = repo_id)
         metrics.update(users)
+        metrics.update(repos)
         return jsonify(metrics)
 
 """
