@@ -53,7 +53,7 @@ def process():
         merge_rate = sum([pr['merged'] for pr in pull_requests])/num_pr
         metrics = requests.get("http://0.0.0.0:5000" + url_for('repo_metrics',user=username,repo=repo)).json()
         metrics['num_pr'] = num_pr
-        metrics['merge_rate'] = merge_rate
+        metrics['merge_rate'] = str(round(merge_rate * 100, 1)) + "%"
         mean_open_time = requests.get("http://0.0.0.0:5000" + url_for('repo_pr_time',user=username,repo=repo)).json()
         metrics.update(mean_open_time)
 
