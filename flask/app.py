@@ -27,6 +27,10 @@ neomodel.config.FORCE_TIMEZONE = True  # default False
 pr_schema = PRSchema()
 prs_schema = PRSchema(many=True)
 
+"""API Call Helper"""
+def call_api(path, **kwargs):
+    return requests.get("http://0.0.0.0:5000" + url_for(path, **kwargs)).json()
+
 @app.route('/')
 def main():
     return 'Hello World!'
@@ -41,26 +45,26 @@ def process():
     repo = request.form['repo']
     ### user-only input
     if repo == '':
-        collabs = requests.get("http://0.0.0.0:5000" + url_for('UsersView:listcollabs', login=username)).json()
+        collabs = call_api('UsersView:listcollabs', login=username)
         return jsonify(collabs)
     ### repo input
-    pull_requests = requests.get("http://0.0.0.0:5000" + url_for('repo_pull_requests',user=username,repo=repo)).json()['pullrequests']
+    pull_requests = call_api('repo_pull_requests',user=username,repo=repo)['pullrequests']
     num_pr = len(pull_requests)
     if num_pr == 0:
         return jsonify({'error': 'username / repo non-existent or contains no pull requests'})
     else:
         ### PR Metrics
         merge_rate = sum([pr['merged'] for pr in pull_requests])/num_pr
-        metrics = requests.get("http://0.0.0.0:5000" + url_for('repo_metrics',user=username,repo=repo)).json()
+        metrics = call_api('repo_metrics',user=username,repo=repo)
         metrics['num_pr'] = num_pr
         metrics['merge_rate'] = str(round(merge_rate * 100, 1)) + "%"
-        mean_open_time = requests.get("http://0.0.0.0:5000" + url_for('repo_pr_time',user=username,repo=repo)).json()
+        mean_open_time = call_api('repo_pr_time',user=username,repo=repo)
         metrics.update(mean_open_time)
 
         ### Connections
         rv = ReposView()
         repo_id = Repo.nodes.get(**{rv.__selection_field__.get("alt"): "/".join((username,repo))}).repo_id
-        users = requests.get("http://0.0.0.0:5000" + url_for('ReposView:listusers',repo_id = repo_id)).json()
+        users = call_api('ReposView:listusers',repo_id = repo_id)
         metrics.update(users)
         return jsonify(metrics)
 
