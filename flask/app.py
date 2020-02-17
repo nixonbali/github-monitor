@@ -33,10 +33,6 @@ def call_api(path, **kwargs):
 
 @app.route('/')
 def main():
-    return 'Hello World!'
-
-@app.route('/index')
-def index():
     return render_template("index.html")
 
 @app.route('/process', methods = ['POST'])
