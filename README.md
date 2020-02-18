@@ -7,7 +7,7 @@ The [GH Archive](https://www.gharchive.org/) is available for download via an AP
 
 ## Kafka Cluster
 
-- Set up w/ Peg **EXPAND ON THIS**
+- Set up w/ [Pegasus](https://github.com/InsightDataScience/pegasus) 
 - upgrade python version to 3.6 (for faust, neo4j, redis dependicies)
 - install faust, neo4j, redis, postgresql python3 drivers on each
 
