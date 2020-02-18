@@ -26,9 +26,9 @@ The [GH Archive](https://www.gharchive.org/) is available for download via an AP
 `pip3 install kafka-python`
 
 ### Producing from API to git-events topic
-`./kafka_producer.py <ip-address>:9092 <start-year> <start-month> <start-day> <end-year> <end-month> <end-day>`
+`./producer.py <ip-address>:9092 <start-year> <start-month> <start-day> <end-year> <end-month> <end-day>`
 
-### Streaming from Kafka Topic (git-events) to Kafka Topic (pr-events)
+### Streaming from Kafka Topic (git-events) to Kafka Topics (pr-events, collab, pr-closed-ids)
 - Create new pr-events topic (as above)
 - Install `faust`, a pure Python stream processing library for Kafka (`pip3 install faust`)
 - Create Streamer (`streamers.py`)
@@ -36,16 +36,24 @@ The [GH Archive](https://www.gharchive.org/) is available for download via an AP
   - Create an agent to consume from the git-events topic, filter for pr-events, and then produce to the pr-events topic
 - Run `faust -A streamers worker -l info` to run streamer
 
-## Testing Kafka Cluster
+### Consuming collab Topic to Neo4j
+- `./consumers collab`
+
+### Testing Kafka Cluster
 - Create a 'test' topic in Kafka Cluster
 - `testing/test_pipeline.py` produces to this topic with `EventsProducer` by reading from `test.json`
 - This topic can be monitored as outlined above.
 
-## Neo4j
+### Neo4j
 - Start a new instance that will host the collaboration network in a Neo4j database.
 
 
-## Redis + PostgreSQL
+### Redis + PostgreSQL
 - Redis can run as a cache on the kafka-cluster, but PostgreSQL, which will be used to store PR metrics, repository, and user information, will require a new instance.
 
-## PostgreSQL
+
+## Front-End API
+The API and front-end are built with Flask, with some help from Javascript Ajax calls. The front-end can be run from an EC2 instance that has open connections to to the Neo4j and Postgres instances.
+
+## Final Pipeline
+![Pipeline](Pipeline.png)
