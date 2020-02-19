@@ -9,9 +9,8 @@ zip_file_ext = ".gz"
 json_file_ext = ".json"
 
 # DATA EXTRACT TO LOCAL
-
-
 def api_to_local(filename):
+    """Subprocesses for downloading and unzipping archive event stream files"""
     zip_filename = filename + zip_file_ext
     url = archive_domain + zip_filename
     # shell script
@@ -20,6 +19,7 @@ def api_to_local(filename):
 
 
 class Destination():
+    """Base Destination Class for Ingested Event Stream from GitHub API"""
     def __init__(self, dest):
         self.dest = dest
 
@@ -28,7 +28,12 @@ class Destination():
 
 
 class EventsIngestor():
+    """
+    GitHub Events API Ingestion
+    Downloads event streams from hour-partitioned archives
+    """
     def __init__(self, start_date, end_date, destination):
+        """Initialized with time period and Destination of Event Stream"""
         self.start_date = start_date
         self.end_date = end_date
         self.destination = destination

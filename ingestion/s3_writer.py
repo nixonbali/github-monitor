@@ -8,9 +8,14 @@ import sys
 s3_client = boto3.client('s3')
 
 class Bucket(Destination):
-    # self.dest is s3bucket
+    """
+    S3 Bucket as Destination
+    self.dest = s3bucket
+    """
+
     ######## UPLOAD TO S3
     def move_to_dest(self, filename, datestring):
+        """Uploads Local File to S3 Bucket"""
         objectname = self.dest + "-" + datestring
         ## run with nohup to print to nohup.out
         try:
