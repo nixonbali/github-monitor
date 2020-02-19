@@ -97,5 +97,5 @@ async def process_pr_closed(closed_pr_ids):
 
 
 if __name__ == "__main__":
-    """Initialize Topics and Run Faust"""
+    """Run Faust"""
     app.main()
