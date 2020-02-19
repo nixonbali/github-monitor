@@ -8,7 +8,10 @@ from models.neo4j_models import User, Repo
 
 
 class ReposView(GRest):
-    """Repo's View (/v1/repos)"""
+    """
+    Repo's View (/v1/repos)
+    A call to /v1/repos/<repo-id> will return Repo Node with id repo-id
+    """
     __model__ = {"primary": Repo}
     __selection_field__ = {"primary": "repo_id",
                             "alt": "name",
@@ -18,6 +21,11 @@ class ReposView(GRest):
 
     @route("/<repo_id>/users", methods=["GET"])
     def listusers(self, repo_id):
+        """
+        Repo's Users
+
+        Returns a list of all User Nodes connected to Repo Node with id repo-id
+        """
         try:
             repo = Repo.nodes.get(**{self.__selection_field__.get("primary"): repo_id})
             if (repo):

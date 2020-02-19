@@ -8,7 +8,10 @@ from models.neo4j_models import User, Repo
 
 
 class UsersView(GRest):
-    """User's View (/v1/users)"""
+    """
+    User's View (/v1/users)
+    A call to /v1/users/<login> will return User Node with login <login>
+    """
     __model__ = {"primary": User,
                     "secondary": {
                         "repos": Repo
@@ -20,6 +23,11 @@ class UsersView(GRest):
 
     @route("/<login>/repos", methods=["GET"])
     def listrepos(self, login):
+        """
+        User's Repos
+
+        Returns a list of all Repo Nodes connected to User Node with login <login>
+        """
         try:
             user = User.nodes.get(**{self.__selection_field__.get("primary"): login})
             if (user):
@@ -38,6 +46,12 @@ class UsersView(GRest):
 
     @route("<login>/collabs", methods = ["GET"])
     def listcollabs(self, login):
+        """
+        User's Connections
+
+        Returns a list of all User Nodes with shared Repo Node connections
+        to User Node with login <login>
+        """
         try:
             user = User.nodes.get(**{self.__selection_field__.get("primary"): login})
             if (user):
@@ -55,11 +69,3 @@ class UsersView(GRest):
                 return jsonify(errors=["Selected user does not exists!"]), 404
         except Exception as e:
                 return jsonify(errors=["An error occurred while processing your request."]), 500
-
-
-
-            # definition = dict(node_class=User, direction=OUTGOING,
-            #                   relation_type=None, model=None)
-            # relations_traversal = Traversal(user, User.__label__,
-            #                                 definition)
-            # all_users_relations = relations_traversal.all()

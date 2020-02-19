@@ -8,18 +8,20 @@ from topic_names import git_events, pull_requests, collabs, closed_prs
 from dateutil.parser import parse
 from aiopg.sa import create_engine
 
+"""App and Topic Initialization"""
 app = faust.App('git-app', broker=secrets.BROKER1)
-
 events_topic = app.topic(git_events)
 pr_events_topic = app.topic(pull_requests, value_type=PREvent)
 collab_topic = app.topic(collabs, value_type=GeneralEvent)
 pr_closed_topic = app.topic(closed_prs)
-
 pull_request_events = ["PullRequestEvent", "PullRequestReviewEvent", "PullRequestReviewCommentEvent"]
 
-### Events Streamer
 @app.agent(events_topic)
 async def process_event(events):
+    """
+    Events Streamer
+    Orchestrates Event Delivery to PR and Graph Topics
+    """
     async for event_json in events:
         ### Filter for PR Events and send through to PR Topic
         if (event_json['type'] in pull_request_events):
@@ -28,14 +30,16 @@ async def process_event(events):
         # read in event_json as new type
         await collab_topic.send(value=event_json)
 
-### PR Events Stream Processor
 @app.agent(pr_events_topic)
 async def process_pr_events(pr_events):
-   async for pr_event in pr_events:
-       client = aredis.StrictRedis(host='localhost', port=6379)
-       await client.set(pr_event.payload.pull_request.id, pr_event.dumps()) # pr_event
-
-       if pr_event.type == "PullRequestEvent":
+    """
+    PR Events Stream Processor
+    Manages Pull Request Monitoring from Open to Close
+    """
+    async for pr_event in pr_events:
+        client = aredis.StrictRedis(host='localhost', port=6379)
+        await client.set(pr_event.payload.pull_request.id, pr_event.dumps()) # pr_event
+        if pr_event.type == "PullRequestEvent":
            ### produce to closed pr topic
            if pr_event.payload.action == 'closed':
                await client.set(pr_event.payload.pull_request.id, pr_event.dumps())
@@ -46,14 +50,18 @@ async def process_pr_events(pr_events):
            ### all pr activity incrementer
            else:
                await client.incr(str(pr_event.payload.pull_request.id) + 'events')
-       ### review incrementer
-       elif pr_event.type == "PullRequestReviewEvent":
+        ### review incrementer
+        elif pr_event.type == "PullRequestReviewEvent":
            await client.incr(str(pr_event.payload.pull_request.id) + 'reviews')
 
 
-### PR Closed Events (redis->processing->postgres)
 @app.agent(pr_closed_topic)
 async def process_pr_closed(closed_pr_ids):
+    """
+    PR Closed Events Consumer
+    Looks up PR Keys for Closed PR
+    Moves Values from Redis to Postgres
+    """
     async for pr_id in closed_pr_ids:
         ### Redis reads + processing
         client = aredis.StrictRedis(host='localhost', port=6379)
@@ -74,9 +82,11 @@ async def process_pr_closed(closed_pr_ids):
             async with engine.acquire() as conn:
                 await conn.execute(
                 "insert into pull_requests (id,num,repo,pr_diff_url,created_at,closed_at,additions,changed_files,commits,deletions,merged,num_reviews_requested,num_review_comments) values (%s, %s, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-                                    (pr_id, 0,#close_event['payload']['number'],
-                                    close_event['repo']['name'], close_event['payload']['pull_request']['diff_url'],
-                                    opentime, closetime, close_event['payload']['pull_request']['additions'],
+                                    (pr_id, 0,
+                                    close_event['repo']['name'],
+                                    close_event['payload']['pull_request']['diff_url'],
+                                    opentime, closetime,
+                                    close_event['payload']['pull_request']['additions'],
                                     close_event['payload']['pull_request']['changed_files'],
                                     close_event['payload']['pull_request']['commits'],
                                     close_event['payload']['pull_request']['deletions'],
@@ -87,4 +97,5 @@ async def process_pr_closed(closed_pr_ids):
 
 
 if __name__ == "__main__":
+    """Initialize Topics and Run Faust"""
     app.main()
