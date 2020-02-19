@@ -2,6 +2,14 @@
 
 Using the [GH Archive](https://www.gharchive.org/) dataset of events on the public GitHub timeline, the goal of this project is to build a real-time ingestion and processing application with Kafka to monitor topics, contributions, repositories, and collaborations of interest.
 
+## Table of Contents
+1. [Ingestion](https://github.com/nixonbali/github-monitor#Ingestion)
+2. [Kafka Cluster](https://github.com/nixonbali/github-monitor#kafka-cluster)
+3. [Frontend API](https://github.com/nixonbali/github-monitor#frontend-api)
+4. [Pipeline](https://github.com/nixonbali/github-monitor#pipeline)
+
+
+
 ## Ingestion
 The [GH Archive](https://www.gharchive.org/) is available for download via an API, however to mitigate the risk of the streaming directly from the API during my Kafka ingestion, I'm also storing all of this data in an S3 bucket. This process is done with `api_to_s3.py` which takes dates as command line date arguments. This is so that it can be run across different subsets of dates from the shell on multiple EC2 instances in parallel to speed up ingestion. The only requirements are that the `awscli` is configured with your credentials on each instance and python3 is installed with the necessary packages (e.g. `boto3`). Additionally, a file `logs/gh-events.log` in your directory and an S3 bucket already built and named `git-events` will allow the script to be run without modifications.
 
@@ -52,8 +60,8 @@ The [GH Archive](https://www.gharchive.org/) is available for download via an AP
 - Redis can run as a cache on the kafka-cluster, but PostgreSQL, which will be used to store PR metrics, repository, and user information, will require a new instance.
 
 
-## Front-End API
+## Frontend API
 The API and front-end are built with Flask, with some help from Javascript Ajax calls. The front-end can be run from an EC2 instance that has open connections to to the Neo4j and Postgres instances.
 
-## Final Pipeline
+## Pipeline
 ![Pipeline](Pipeline.png)
