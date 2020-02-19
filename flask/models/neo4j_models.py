@@ -17,8 +17,3 @@ class User(StructuredNode, models.Node):
     login = StringProperty()
     last_active = StringProperty()
     repos = RelationshipTo(Repo, "event", model=EventInfo, cardinality=ZeroOrMore)
-
-
-    # def repos(self):
-    #     results, columns = self.cypher("MATCH p=(n:User)-->() where id(n) = {self} RETURN p")
-    #     return [self.inflate(row[0]) for row in results]

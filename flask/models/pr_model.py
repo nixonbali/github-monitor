@@ -1,29 +1,28 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from sqlalchemy.sql import func
-#from sqlalchemy import Integer
 
 rdb = SQLAlchemy()
 ma = Marshmallow()
 
 class Metrics:
     def __init__(self, additions, changed_files, commits, deletions,
-                    num_reviews_requested, num_review_comments): #, merged):
+                    num_reviews_requested, num_review_comments):
         self.additions = additions
         self.changed_files = changed_files
         self.commits = commits
         self.deletions = deletions
         self.num_reviews_requested = num_reviews_requested
         self.num_review_comments = num_review_comments
-        #self.merged = merged
 
 class PRModel(rdb.Model):
     """
     Pull Request Model
+    Maps to pull-request postgresql table
     """
     __tablename__ = 'pull_requests'
 
-    dbid = rdb.Column(rdb.Integer, primary_key = True, unique = True)#, serial = True)
+    dbid = rdb.Column(rdb.Integer, primary_key = True, unique = True)
     id = rdb.Column(rdb.Integer)
     num = rdb.Column(rdb.Integer)
     repo = rdb.Column(rdb.String(255))
@@ -39,6 +38,7 @@ class PRModel(rdb.Model):
     num_review_comments = rdb.Column(rdb.Integer)
 
     def __init__(self, data):
+        """Initializes with table column mappings"""
         self.id = data.get('id')
         self.num = data.get('num')
         self.repo = data.get('repo')
@@ -55,44 +55,46 @@ class PRModel(rdb.Model):
 
     @staticmethod
     def all_prs():
+        """All Pull Requests"""
         return PRModel.query.all()
 
     @staticmethod
     def get_pr_by_id(id):
+        """Pull Request by ID"""
         return PRModel.query.filter_by(id=id).all()
 
     @staticmethod
     def get_pr_by_repo(repo):
+        """Pull Requests by Repository"""
         return PRModel.query.filter_by(repo=repo).all()
 
-    """
-    Additional @static methods:
-
-    avg: events, deltions, additions, comments, commits, changed files, merge %, review requests
-
-    if unable to include w/ above: merge %
-
-    avg: time to close
-
-    count: prs
-    """
     @staticmethod
     def get_repo_metrics(repo):
-        return Metrics(*PRModel.query.with_entities(func.avg(PRModel.additions),
-                                    func.avg(PRModel.changed_files),
-                                    func.avg(PRModel.commits),
-                                    func.avg(PRModel.deletions),
-                                    func.avg(PRModel.num_reviews_requested), #, func.avg(PRModel.merged)
-                                    func.avg(PRModel.num_review_comments)).filter_by(repo=repo).first())
-                                    #func.avg(PRModel.merged.cast(rdb.Integer))).filter_by(repo=repo).first())
+        """
+        Repository Metrics
+        Averages all countable pull request metrics
+        """
+        return Metrics(*PRModel.query.\
+                        with_entities(\
+                        func.avg(PRModel.additions),
+                        func.avg(PRModel.changed_files),
+                        func.avg(PRModel.commits),
+                        func.avg(PRModel.deletions),
+                        func.avg(PRModel.num_reviews_requested),
+                        func.avg(PRModel.num_review_comments))\
+                        .filter_by(repo=repo).first())
 
     @staticmethod
     def get_repo_pr_time(repo):
-        return PRModel.query.with_entities(func.avg(PRModel.closed_at - PRModel.created_at)).filter_by(repo=repo).first()
+        """Repository's Average PR Open Time"""
+        return PRModel.query.\
+                with_entities(func.avg(PRModel.closed_at - PRModel.created_at))\
+                .filter_by(repo=repo).first()
 
 
 
 
 class PRSchema(ma.ModelSchema):
+    """Pull Request Schema"""
     class Meta:
         model = PRModel

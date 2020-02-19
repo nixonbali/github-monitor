@@ -27,16 +27,22 @@ neomodel.config.FORCE_TIMEZONE = True  # default False
 pr_schema = PRSchema()
 prs_schema = PRSchema(many=True)
 
-"""API Call Helper"""
 def call_api(path, **kwargs):
+    """API Call Helper"""
     return requests.get("http://0.0.0.0:5000" + url_for(path, **kwargs)).json()
 
 @app.route('/')
 def main():
+    """Home Page"""
     return render_template("index.html")
 
 @app.route('/process', methods = ['POST'])
 def process():
+    """
+    Query Button
+    Called by Ajax to processes form input (username,repo), make API calls and
+    return jsonified data back to Ajax
+    """
     username = request.form['username']
     repo = request.form['repo']
     ### user's repos
@@ -68,38 +74,38 @@ def process():
         metrics.update(repos)
         return jsonify(metrics)
 
-"""
 
+"""
 API Calls
-
 """
+
 @app.route('/v1/pullrequest/examples')
 def example_pull_requests():
+    """Example Pull Requests"""
     prs = PRModel.all_prs()
     return {"pullrequests": prs_schema.dump(prs[:3])}
 
-"""Pull Request by PR ID"""
 @app.route('/v1/pullrequest/id/<id>')
 def single_pull_request(id):
+    """Pull Request by PR ID"""
     prs = PRModel.get_pr_by_id(id)
     return {"pullrequests": prs_schema.dump(prs)}
-# test id: 645165
 
-"""Pull Requests by Repo"""
 @app.route('/v1/pullrequest/repo/<user>/<repo>')
 def repo_pull_requests(user, repo):
+    """Pull Requests by Repo"""
     prs = PRModel.get_pr_by_repo("/".join((user,repo)))
     return json.dumps({"pullrequests": prs_schema.dump(prs)})
 
-"""PR Metrics by Repo"""
 @app.route('/v1/metrics/repo/<user>/<repo>')
 def repo_metrics(user, repo):
+    """PR Metrics by Repo"""
     metrics = PRModel.get_repo_metrics("/".join((user,repo)))
     return json.dumps(pr_schema.dump(metrics))
 
-"""PR Open Time by Repo"""
 @app.route('/v1/pr_time/repo/<user>/<repo>')
 def repo_pr_time(user, repo):
+    """PR Open Time by Repo"""
     pr_time = PRModel.get_repo_pr_time("/".join((user,repo)))[0]
     hours, seconds = divmod(pr_time.seconds, 3600)
     return {
