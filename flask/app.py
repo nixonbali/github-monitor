@@ -18,10 +18,9 @@ rdb.init_app(app)
 ma.init_app(app)
 
 """Connection to Neo4j"""
-# configure connection to database
-neomodel.config.DATABASE_URL = NEO4J_HOST # The bolt URL of your Neo4j instance
+neomodel.config.DATABASE_URL = NEO4J_HOST # Neo4j instance bolt URL
 neomodel.config.AUTO_INSTALL_LABELS = True
-neomodel.config.FORCE_TIMEZONE = True  # default False
+neomodel.config.FORCE_TIMEZONE = True 
 
 
 pr_schema = PRSchema()
